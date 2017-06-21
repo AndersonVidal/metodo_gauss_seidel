@@ -120,7 +120,6 @@ imprimeMatriz(matrizCoeficientes, vetorTermosIndependentes) #teste
 #True -> o método de Gauss-Seidel é executado
 #False -> significa que a matriz não é convergente e sendo assim não possui um resultado determinado
 testeConvergencia = testeSassenfeld(matrizCoeficientes)
-'''votar aqui!!!!'''
 
 #ERRO RELATIVO e APLICAÇÃO DO MÉTODO DE GAUSS-SEIDEL
 #É solicitado do usuário o quão preciso deve ser o resultado, definindo até que ponto ocorreram as interações
