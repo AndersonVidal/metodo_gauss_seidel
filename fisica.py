@@ -50,6 +50,44 @@ def testeSassenfeld(matriz):
 	
 	return True
 
+def gaussSeidel(matrizA, matrizB, erro):
+	vetorX = []
+	interacoes = []
+	calc = 0
+	erroRelativo = 1
+	subtracaoVetor = 0
+	if erro != -1: erro = pow(10, -erro)
+	#vetor x inicial
+	for r in range(len(matrizA)):
+		vetorX.append(0)
+	
+	#interação
+	while erroRelativo > erro:
+		#interacoes
+		for i in range(len(matrizA)):
+			calc += matrizB[i]
+			for j in range(len(matrizA)):
+				if i != j:
+					calc += matrizA[i][j] * vetorX[j] * (-1)
+			vetorX[i] = calc
+			calc = 0
+		interacoes.append(vetorX)
+		
+		#calculo do erro relativo
+		if len(interacoes) > 1:
+			for s in range(len(interacoes[0])):
+				if (interacoes[len(interacoes) -1][s] - interacoes[len(interacoes) -2][s]) > subtracaoVetor:
+					subtracaoVetor = interacoes[len(interacoes) -1][s] - interacoes[len(interacoes) -2][s]
+			erroRelativo = abs(subtracaoVetor) / abs(max(interacoes[len(interacoes) - 1]))
+		elif erro == -1: 
+			return interacoes
+		else:
+			erroRelativo = 1
+		
+	
+	return interacoes
+
+
 #COLETA NUMERO DE LINHAS
 #Cada malha representa uma equação do sistema e o número de equações define a ordem da matriz dos coeficientes
 numMalhas = int(raw_input('DIGITE O NÚMERO DE MALHAS DO CIRCUITO:\n'))
@@ -84,22 +122,11 @@ imprimeMatriz(matrizCoeficientes, vetorTermosIndependentes) #teste
 testeConvergencia = testeSassenfeld(matrizCoeficientes)
 '''votar aqui!!!!'''
 
-#ERRO RELATIVO
+#ERRO RELATIVO e APLICAÇÃO DO MÉTODO DE GAUSS-SEIDEL
 #É solicitado do usuário o quão preciso deve ser o resultado, definindo até que ponto ocorreram as interações
-#do metodo númerico
+#do metodo númerico.
+#Apos isso a função gaussSeidel é chamada e retorna o valor da interação desejada
 if testeConvergencia:
-	erro = int(raw_input("DIGITE O EXPOENTE DO ERRO RELATIVO DESEJÁDO:\n"))
-
-
-def gaussSeidel(matrizA, matrizB, erro):
-	vetorX = []
-	for r in range(len(matrizA)):
-		vetorX.append(0)
-	
-	
-	
-	for i in range(len(matrizA)):
-		for j in range(len(matrizA):
-			if i != j:
-				vetorX[i] = 
+	erro = int(raw_input("DIGITE O MÓDULO DO EXPOENTE DO ERRO RELATIVO DESEJÁDO:\n"))
+	print gaussSeidel(matrizCoeficientes, vetorTermosIndependentes, erro)
 
