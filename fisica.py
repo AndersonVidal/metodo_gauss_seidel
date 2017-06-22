@@ -112,6 +112,7 @@ for r in range(len(matrizCoeficientes)):
 if testeConvergencia:
 	print "DIGITE O MÓDULO DO EXPOENTE DO ERRO RELATIVO DESEJÁDO:"
 	print "(Digite um número menor que 0 se deseja um resultado rápido.)"
+	print "(Digite 0 para obter o resultado mais preciso possivel!)"
 	erro = int(raw_input())
 	if erro > 0: erro = pow(10, -erro)
 	erroRelativo = 1
@@ -123,7 +124,8 @@ if testeConvergencia:
 		
 		if erro < 0:
 			break
-		
+		elif erro == 1:
+			if interacoes[len(interacoes) -1] == interacoes[len(interacoes) - 2]: break
 		elif len(interacoes) > 1:
 			for s in range(numMalhas):
 				if (interacoes[len(interacoes) - 1][s] - interacoes[len(interacoes) - 2][s]) > subtracao:
