@@ -50,43 +50,22 @@ def testeSassenfeld(matriz):
 	
 	return True
 
-def gaussSeidel(matrizA, matrizB, erro):
-	vetorX = []
-	interacoes = []
+#METODO GAUSS-SEIDEL
+#realiza apenas uma interação. Deve ser chamado consecutivamente para realizar
+#varias interacoes. ALtera o vetorCorrente!
+def gaussSeidel(matrizA, matrizB, vetorX):
 	calc = 0
-	erroRelativo = 1
-	subtracaoVetor = 0
-	if erro != -1: erro = pow(10, -erro)
-	#vetor x inicial
-	for r in range(len(matrizA)):
-		vetorX.append(0)
-	
-	#interação
-	while erroRelativo > erro:
-		#interacoes
-		for i in range(len(matrizA)):
-			calc += matrizB[i]
-			for j in range(len(matrizA)):
-				if i != j:
-					calc += matrizA[i][j] * vetorX[j] * (-1)
-			vetorX[i] = calc
-			calc = 0
-		interacoes.append(vetorX)
+	vetor = vetorX
+	#interacao
+	for i in range(len(matrizA)):
+		calc += matrizB[i]
+		for j in range(len(matrizA)):
+			if i != j:
+				calc += matrizA[i][j] * vetor[j] * (-1)
+		vetor[i] = calc
+		calc = 0
 		
-		#calculo do erro relativo
-		if len(interacoes) > 1:
-			for s in range(len(interacoes[0])):
-				if (interacoes[len(interacoes) -1][s] - interacoes[len(interacoes) -2][s]) > subtracaoVetor:
-					subtracaoVetor = interacoes[len(interacoes) -1][s] - interacoes[len(interacoes) -2][s]
-			erroRelativo = abs(subtracaoVetor) / abs(max(interacoes[len(interacoes) - 1]))
-		elif erro == -1: 
-			return interacoes
-		else:
-			erroRelativo = 1
-		
-	
-	return interacoes
-
+	return vetor
 
 #COLETA NUMERO DE LINHAS
 #Cada malha representa uma equação do sistema e o número de equações define a ordem da matriz dos coeficientes
@@ -122,10 +101,43 @@ imprimeMatriz(matrizCoeficientes, vetorTermosIndependentes) #teste
 testeConvergencia = testeSassenfeld(matrizCoeficientes)
 
 #ERRO RELATIVO e APLICAÇÃO DO MÉTODO DE GAUSS-SEIDEL
-#É solicitado do usuário o quão preciso deve ser o resultado, definindo até que ponto ocorreram as interações
-#do metodo númerico.
-#Apos isso a função gaussSeidel é chamada e retorna o valor da interação desejada
+#é coletado o expoente do erro desejado pelo 
+
+vetorCorrente = []
+interacoes = []
+subtracao = 0
+for r in range(len(matrizCoeficientes)):
+		vetorCorrente.append(0)
+
 if testeConvergencia:
-	erro = int(raw_input("DIGITE O MÓDULO DO EXPOENTE DO ERRO RELATIVO DESEJÁDO:\n"))
-	print gaussSeidel(matrizCoeficientes, vetorTermosIndependentes, erro)
+	print "DIGITE O MÓDULO DO EXPOENTE DO ERRO RELATIVO DESEJÁDO:"
+	print "(Digite um número menor que 0 se deseja um resultado rápido.)"
+	erro = int(raw_input())
+	erroRelativo = 1
+	while erroRelativo > erro:
+		interacoes += [gaussSeidel(matrizCoeficientes, vetorTermosIndependentes, vetorCorrente)]
+		vetorCorrente = gaussSeidel(matrizCoeficientes, vetorTermosIndependentes, vetorCorrente)
+		
+		if erro < 0:
+			break
+		
+		elif len(interacoes) > 1:
+			for s in range(len(interacoes[len(interacoes[0]) - 1])):
+				if (interacoes[len(interacoes[0]) - 1][s] - interacoes[len(interacoes[0]) - 2][s]) > subtracao:
+					subtracao = interacoes[len(interacoes[0]) - 1][s] - interacoes[len(interacoes[0]) - 2][s]
+			
+			erroRelativo = abs(subtracao) / max(interacoes[len(interacoes[0]) -1])
+	
+	print "\n\n-----------RESULTADO-----------\n"
+	a = 1
+	for i in range(len(vetorCorrente)):
+		print "i" + str(a)+ " =", vetorCorrente[i]
+		a += 1 
+	print "\nNúmero de interações:", len(interacoes)
+	print gaussSeidel(matrizCoeficientes, vetorTermosIndependentes, vetorCorrente)
+	print interacoes
+	print vetorCorrente
+
+else:
+	print "Matriz não é convergente! Verifique se o sistema de equações esta com os valores corretos!"
 
