@@ -55,7 +55,7 @@ def testeSassenfeld(matriz):
 #varias interacoes. ALtera o vetorCorrente!
 def gaussSeidel(matrizA, matrizB, vetorX):
 	calc = 0
-	vetor = vetorX
+	vetor = vetorX[:]
 	#interacao
 	for i in range(len(matrizA)):
 		calc += matrizB[i]
@@ -113,30 +113,35 @@ if testeConvergencia:
 	print "DIGITE O MÓDULO DO EXPOENTE DO ERRO RELATIVO DESEJÁDO:"
 	print "(Digite um número menor que 0 se deseja um resultado rápido.)"
 	erro = int(raw_input())
+	if erro > 0: erro = pow(10, -erro)
 	erroRelativo = 1
+	
+	subtracao = 0
 	while erroRelativo > erro:
-		interacoes += [gaussSeidel(matrizCoeficientes, vetorTermosIndependentes, vetorCorrente)]
 		vetorCorrente = gaussSeidel(matrizCoeficientes, vetorTermosIndependentes, vetorCorrente)
+		interacoes.append(vetorCorrente[:])
 		
 		if erro < 0:
 			break
 		
 		elif len(interacoes) > 1:
-			for s in range(len(interacoes[len(interacoes[0]) - 1])):
-				if (interacoes[len(interacoes[0]) - 1][s] - interacoes[len(interacoes[0]) - 2][s]) > subtracao:
-					subtracao = interacoes[len(interacoes[0]) - 1][s] - interacoes[len(interacoes[0]) - 2][s]
-			
-			erroRelativo = abs(subtracao) / max(interacoes[len(interacoes[0]) -1])
+			for s in range(numMalhas):
+				if (interacoes[len(interacoes) - 1][s] - interacoes[len(interacoes) - 2][s]) > subtracao:
+					subtracao = interacoes[len(interacoes) - 1][s] - interacoes[len(interacoes) - 2][s]
+			erroRelativo = abs(subtracao) / max(interacoes[len(interacoes) -1])
+			subtracao = 0
+			if interacoes[len(interacoes) -1] == interacoes[len(interacoes) - 2]: break
 	
 	print "\n\n-----------RESULTADO-----------\n"
 	a = 1
 	for i in range(len(vetorCorrente)):
-		print "i" + str(a)+ " =", vetorCorrente[i]
+		print "i" + str(a)+ " =", vetorCorrente[i], ' A'
 		a += 1 
 	print "\nNúmero de interações:", len(interacoes)
-	print gaussSeidel(matrizCoeficientes, vetorTermosIndependentes, vetorCorrente)
-	print interacoes
-	print vetorCorrente
+	a = 0
+	for i in interacoes:
+		print 'I(' + str(a) + ') =' , i
+		a += 1
 
 else:
 	print "Matriz não é convergente! Verifique se o sistema de equações esta com os valores corretos!"
