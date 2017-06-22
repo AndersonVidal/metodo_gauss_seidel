@@ -52,7 +52,7 @@ def testeSassenfeld(matriz):
 
 #METODO GAUSS-SEIDEL
 #realiza apenas uma interação. Deve ser chamado consecutivamente para realizar
-#varias interacoes. ALtera o vetorCorrente!
+#varias interacoes. Retorna um vetor com o resultado das interações
 def gaussSeidel(matrizA, matrizB, vetorX):
 	calc = 0
 	vetor = vetorX[:]
@@ -94,21 +94,30 @@ imprimeMatriz(matrizCoeficientes, vetorTermosIndependentes)
 obterSistemaTrabalho(matrizCoeficientes, vetorTermosIndependentes)
 imprimeMatriz(matrizCoeficientes, vetorTermosIndependentes) #teste
 
-#VERIFICANDO CONVERGENCIA DA 
+#VERIFICANDO CONVERGENCIA DA MATRIZCOEFICIENTES 
 #O boleano testeConvergencia será aplicado como condição para a execução do método
 #True -> o método de Gauss-Seidel é executado
 #False -> significa que a matriz não é convergente e sendo assim não possui um resultado determinado
 testeConvergencia = testeSassenfeld(matrizCoeficientes)
 
-#ERRO RELATIVO e APLICAÇÃO DO MÉTODO DE GAUSS-SEIDEL
-#é coletado o expoente do erro desejado pelo 
 
+#INICIALIZAÇÃO DO VETOR RESULTADO E DE VETORES E VARIÁVEIS AUXILIARES
+#vetorCorrente precisa de um valor inicial, sendo este escolhicom como sendo o vetor nulo
+#interacoes armazenará todas as interações geradas
+#subtração é uma variável auxiliar para realizar a operação do erro
 vetorCorrente = []
 interacoes = []
 subtracao = 0
 for r in range(len(matrizCoeficientes)):
 		vetorCorrente.append(0)
 
+#APLICAÇÃO DO METODO GAUSS-SEIDEL
+#A principio é verificado O teste de sassenfeld
+#É solicitado do usuário o valor do expoente do erro desejado. Este expoente é para base 10 e é negativo,
+#sendo recebido como numero inteiro positivo.
+#casos expeciais de entrada:
+#	entrada < 0: Realiza apenas uma interação, mostrando um resultado rápido
+#	entrada = 0: Realiza o numero de interações necessárias para gerar o resultado da convergia
 if testeConvergencia:
 	print "DIGITE O MÓDULO DO EXPOENTE DO ERRO RELATIVO DESEJÁDO:"
 	print "(Digite um número menor que 0 se deseja um resultado rápido.)"
@@ -133,17 +142,30 @@ if testeConvergencia:
 			erroRelativo = abs(subtracao) / max(interacoes[len(interacoes) -1])
 			subtracao = 0
 			if interacoes[len(interacoes) -1] == interacoes[len(interacoes) - 2]: break
-	
-	print "\n\n-----------RESULTADO-----------\n"
+
+#IMPRESSÃO DOS RESULTADOS
+#O vetor interções estará com todas as interações feitas no programa
+#Será impresso o valor de cada resultado
+#O numero de interações necessarias e as interações feitas
+	b = 0
+	s = 1
+	print "\n\n--------------INTERAÇÕES REALIZADAS--------------"
+	for i in range(len(interacoes) - 1):
+		print '\nI(' + str(b) + '): \n'
+		for x in range(len(interacoes[i])):
+			print 'i(' + str(s) + ') =' , interacoes[i][x]
+			s += 1
+		s = 1
+		b += 1
+
+	print "\n--------------RESULTADO--------------\n"
 	a = 1
 	for i in range(len(vetorCorrente)):
 		print "i" + str(a)+ " =", vetorCorrente[i], ' A'
 		a += 1 
-	print "\nNúmero de interações:", len(interacoes)
-	a = 0
-	for i in interacoes:
-		print 'I(' + str(a) + ') =' , i
-		a += 1
+	print "\nNúmero de interações:", (len(interacoes) -1)
+	print "\n\nNota: algumas interações 'parecem' estar repetidas, porém são resultado de imprecisões",
+	print "da notação de ponto flutuante da maquina!"
 
 else:
 	print "Matriz não é convergente! Verifique se o sistema de equações esta com os valores corretos!"
