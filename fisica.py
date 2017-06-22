@@ -86,13 +86,16 @@ for i in range(numMalhas):
 	vetorTermosIndependentes.append(entrada[(len(entrada) - 1)])
 
 #imprime a matriz para visualizar a matriz inserida
+print "\nMATRIZ DE ENTRADA"
 imprimeMatriz(matrizCoeficientes, vetorTermosIndependentes) 
 
 #DIAGONALIZANDO A MATRIZ
 #chama-se as funções que iram transformar a matriz em uma matriz de trabalho e logo em seguida
 #é impressa a matriz para verificação do usuário
+print "\n\nMATRIZ DE TRABALHO\n"
 obterSistemaTrabalho(matrizCoeficientes, vetorTermosIndependentes)
 imprimeMatriz(matrizCoeficientes, vetorTermosIndependentes) #teste
+print "\n"
 
 #VERIFICANDO CONVERGENCIA DA MATRIZCOEFICIENTES 
 #O boleano testeConvergencia será aplicado como condição para a execução do método
